@@ -2,6 +2,7 @@ import UIKit
 
 class DropdownMenuTableViewCell: UITableViewCell {
 
+    @IBOutlet var label: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
     }
@@ -10,5 +11,8 @@ class DropdownMenuTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
     }
-    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.label.text = nil
+    }
 }

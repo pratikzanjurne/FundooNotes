@@ -43,10 +43,7 @@ extension DropdownTableView:UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DropdownMenuTableViewCell") as! DropdownMenuTableViewCell
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 150, height: 34))
-        label.text = array[indexPath.row]
-        label.textAlignment = .center
-        cell.addSubview(label)
+        cell.label.text = array[indexPath.row]
         return cell
     }
     

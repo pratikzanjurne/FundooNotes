@@ -8,10 +8,10 @@
       location = "group:FundooNotes/Note+CoreDataProperties.swift">
    </FileRef>
    <FileRef
-      location = "group:/Users/bridgelabz/Documents/Pratik/Swift_Demo_Apps/LoginPage/FundooNotes/model/User+CoreDataClass.swift">
+      location = "group:FundooNotes/model/User+CoreDataClass.swift">
    </FileRef>
    <FileRef
-      location = "group:/Users/bridgelabz/Documents/Pratik/Swift_Demo_Apps/LoginPage/FundooNotes/model/User+CoreDataProperties.swift">
+      location = "group:FundooNotes/model/User+CoreDataProperties.swift">
    </FileRef>
    <FileRef
       location = "group:FundooNotes.xcodeproj">

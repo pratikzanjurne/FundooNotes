@@ -64,4 +64,16 @@ class DashboardPresenterService {
             completion(result, message)
         }
     }
+    
+    func archiveNoteArray(notes:[NoteModel],completion:@escaping(Bool,String)->Void){
+        FirebaseDBManager.shared.archiveNoteArray(notes: notes) { (result, message) in
+            completion(result, message)
+        }
+    }
+    func unarchiveNoteArray(notes:[NoteModel],completion:@escaping(Bool,String)->Void){
+        FirebaseDBManager.shared.unarchiveNoteArray(notes: notes) { (result, message) in
+            completion(result, message)
+        }
+    }
+
 }

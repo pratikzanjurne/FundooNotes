@@ -7,7 +7,6 @@ extension Note {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Note> {
         return NSFetchRequest<Note>(entityName: "Note")
     }
-
     @NSManaged public var colour: String?
     @NSManaged public var creadted_date: String?
     @NSManaged public var image: NSData?

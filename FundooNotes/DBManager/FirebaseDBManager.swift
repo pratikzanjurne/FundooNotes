@@ -228,14 +228,67 @@ class FirebaseDBManager{
         }
     }
     
+    func archiveNote(note:NoteModel,completion:@escaping (Bool,String)->Void){
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        let userNotesRef = self.rootRef.child(userId).child("notes")
+        userNotesRef.observeSingleEvent(of: .value) { (snapshot) in
+            if snapshot.hasChild(note.note_id){
+                let noteRef = userNotesRef.child(note.note_id)
+                let value = ["isPinned":false,"isArchived":true]
+                noteRef.updateChildValues(value)
+                completion(true,"Archived")
+                return
+            }else{
+                completion(false, "Not able to archive")
+            }
+        }
+    }
+    
+    func unarchiveNote(note:NoteModel,completion:@escaping (Bool,String)->Void){
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        let userNotesRef = self.rootRef.child(userId).child("notes")
+        userNotesRef.observeSingleEvent(of: .value) { (snapshot) in
+            if snapshot.hasChild(note.note_id){
+                let noteRef = userNotesRef.child(note.note_id)
+                let value = ["isPinned":false,"isArchived":false]
+                noteRef.updateChildValues(value)
+                completion(true,"Unarchived")
+                return
+            }else{
+                completion(false, "Not able to unarchive")
+            }
+        }
+    }
+    
+    func archiveNoteArray(notes:[NoteModel],completion:@escaping (Bool,String)->Void){
+        for note in notes{
+            self.archiveNote(note: note, completion: { (result, message) in
+                if note.note_id == notes[notes.count-1].note_id{
+                    completion(result, message)
+                }
+            })
+        }
+    }
+    
+    func unarchiveNoteArray(notes:[NoteModel],completion:@escaping (Bool,String)->Void){
+        for note in notes{
+            self.unarchiveNote(note: note, completion: { (result, message) in
+                if note.note_id == notes[notes.count-1].note_id{
+                    completion(result, message)
+                }
+            })
+        }
+    }
+
+
     func pinNoteArray(notes:[NoteModel],completion:@escaping (Bool,String)->Void){
         for note in notes{
             self.pinNote(noteToPin: note, completion: { _,_ in
-                
+                if note.note_id == notes[notes.count-1].note_id{
+                    completion(true, "Done")
+                }
             })
         }
-        completion(true, "Done")
-
     }
     
     func deleteNoteArray(notes:[NoteModel],completion:@escaping (Bool,String)->Void){

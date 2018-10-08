@@ -120,4 +120,16 @@ class DashboardPresenter{
             completion(result, message)
         })
     }
+    
+    func archiveNoteArray(notes:[NoteModel],completion:@escaping(Bool,String)->Void){
+        presenterService?.archiveNoteArray(notes: notes) { (result, message) in
+            completion(result, message)
+        }
+    }
+    func unarchiveNoteArray(notes:[NoteModel],completion:@escaping(Bool,String)->Void){
+        presenterService?.unarchiveNoteArray(notes: notes) { (result, message) in
+            completion(result, message)
+        }
+    }
+
 }

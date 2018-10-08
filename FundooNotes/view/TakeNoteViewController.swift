@@ -185,7 +185,6 @@ class TakeNoteViewController: BaseViewController,UITextViewDelegate,PColorDelega
     }
     
     @objc func onReminderLblPressed(sender: UITapGestureRecognizer){
-            print("Label pressed")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         guard let vc = storyboard.instantiateViewController(withIdentifier: "SetReminderView") as? SetReminderViewController else{
             return;

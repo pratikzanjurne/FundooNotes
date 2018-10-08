@@ -47,11 +47,15 @@ class DashboardViewController:BaseViewController{
     var selectedColor:String = Constant.Color.colourOrange
     var isDropdownColorOptionVisible = false
     var isDropdownMenuViaible = false
+    var refreshControl:UIRefreshControl!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         initialseView()
         presenter = DashboardPresenter(pDashboardView: self, presenterService: DashboardPresenterService())
         setupData()
+        refreshControl.addTarget(self, action: #selector(onRefresh), for: .valueChanged)
+        self.collectionView.addSubview(refreshControl)
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
@@ -70,6 +74,7 @@ class DashboardViewController:BaseViewController{
         }
     }
     override func initialseView() {
+        self.refreshControl = UIRefreshControl()
         self.navigationBar.barTintColor = UIColor(hexString: selectedColor)
         let cell = UINib(nibName: "DashboardNoteCell", bundle: nil)
         self.collectionView.register(cell, forCellWithReuseIdentifier: "DashboardNoteCell")
@@ -100,6 +105,11 @@ class DashboardViewController:BaseViewController{
         collectionView.delegate = self
         collectionView.dataSource = self
         self.presenter?.getNotes()
+    }
+    
+    @objc func onRefresh(){
+        print("Refreshing.........")
+        presenter?.getNotes()
     }
     
     @IBAction func onSideMenuTapped(_ sender: Any) {
@@ -154,15 +164,20 @@ class DashboardViewController:BaseViewController{
             cell?.layer.borderColor = UIColor.gray.cgColor
             cell?.layer.borderWidth = 3.0
             collectionView.allowsMultipleSelection = true
+            if isMultipleSelectionActive{
+                
+            }else{
+                NavigationHelper.setNavigationItem(target: self, delegate: self, option: self.activeView, completion: { (navigationItem) in
+                    if let navigationItems = navigationItem.leftBarButtonItems{
+                        navigationItems[1].title = "\(self.selectedNotes.count)"
+                    }
+                    self.navigationBar.pushItem(navigationItem, animated: false)
+                })
+            }
             self.isMultipleSelectionActive = true
-            NavigationHelper.setNavigationItem(target: self, delegate: self, option: self.activeView, completion: { (navigationItem) in
-                if let navigationItems = navigationItem.leftBarButtonItems{
-                    navigationItems[1].title = "\(self.selectedNotes.count)"
-                }
-                self.navigationBar.pushItem(navigationItem, animated: false)
-            })
             self.view.backgroundColor = UIColor(hexString: Constant.Color.colourReminderText)
             self.navigationBar.barTintColor = UIColor.white
+            collectionView.selectItem(at: selectedIndexPath, animated: true, scrollPosition: .centeredVertically)
         case .changed:
             collectionView.updateInteractiveMovementTargetPosition(gesture.location(in: gesture.view!))
         case .ended:
@@ -444,6 +459,7 @@ extension DashboardViewController:PDashboardView{
     }
     
     func setNotes(notes : [NoteModel]) {
+        refreshControl.endRefreshing()
         self.notes = notes
         pinnedNotes = notes.filter({ (note) -> Bool in
             return note.is_pinned == true
@@ -454,6 +470,7 @@ extension DashboardViewController:PDashboardView{
         self.collectionView.reloadData()
         presenter?.getNotesOfType(self.activeView, completion: { (notes) in
             self.filteredNotes = notes
+            self.collectionView.reloadData()
         })
     }
     
@@ -485,15 +502,17 @@ extension DashboardViewController:PShowNotes{
                 if option == .note{
                     self.isFilterActive = false
                     self.dropdownMenu.array = ["Archive","Delete","Make A Copy"]
+                    self.dropdownMenu.tableView.reloadData()
                 }else{
                     self.isFilterActive = true
                 }
                 if option == .archive{
                     self.dropdownMenu.array = ["Unarchive","Delete","Make A Copy"]
+                    self.dropdownMenu.tableView.reloadData()
                 }else if option == .reminder{
                     self.dropdownMenu.array = ["Archive","Delete","Make A Copy"]
+                    self.dropdownMenu.tableView.reloadData()
                 }
-                self.dropdownMenu.tableView.reloadData()
                 self.notesNavigationItem.title = viewTitle
                 self.view.backgroundColor = UIColor(hexString: colour)
                 self.navigationBar.barTintColor = UIColor(hexString: colour)
@@ -617,8 +636,14 @@ extension DashboardViewController:PDropdownMenu{
             case .note:
                 switch indexPath{
                 case 0:
+                    presenter?.archiveNoteArray(notes: self.selectedNotes, completion: { (result, message) in
+                        self.presenter?.reloadView()
+                    })
                     break
                 case 1:
+                    presenter?.deleteNoteArray(notes: self.selectedNotes, completion: { (result, message) in
+                        self.presenter?.reloadView()
+                    })
                     break
                 default:
                     break
@@ -627,24 +652,49 @@ extension DashboardViewController:PDropdownMenu{
             case .deleted:
                 switch indexPath{
                 case 0:
+                    presenter?.deleteNoteArrayFromTrash(notes: self.selectedNotes, completion: { (result, message) in
+                        self.presenter?.reloadView()
+                    })
                     break
                 default:
                     break
                 }
                 break
             case .reminder:
+                switch indexPath{
+                case 0 :
+                    presenter?.archiveNoteArray(notes: self.selectedNotes, completion: { (result, message) in
+                        self.presenter?.reloadView()
+                    })
+                    break
+                case 1:
+                    presenter?.deleteNoteArray(notes: self.selectedNotes, completion: { (result, message) in
+                        self.presenter?.reloadView()
+                    })
+                    break
+                default:
+                    break
+                }
                 break
             case .archive:
                 switch indexPath{
                 case 0:
+                    presenter?.unarchiveNoteArray(notes: self.selectedNotes, completion: { (result, message) in
+                        self.presenter?.reloadView()
+                    })
                     break
                 case 1:
+                    presenter?.deleteNoteArray(notes: self.selectedNotes, completion: { (result, message) in
+                        self.presenter?.reloadView()
+                    })
                     break
                 default:
                     break
                 }
                 break
             }
+        self.onClickOption()
+        self.onClickBack()
     }
 }
 
