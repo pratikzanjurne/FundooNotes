@@ -15,4 +15,8 @@ class DashboardContainerPresenter{
             completion(note)
         })
     }
+    
+    func signOutUser(){
+        presenterService?.signOutUser()
+    }
 }

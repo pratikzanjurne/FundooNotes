@@ -10,7 +10,6 @@ protocol PDashboardView {
     func startLoading()
     func setSelectedNotes(notes:[NoteModel])
     func reloadView()
-    
 }
 
 
@@ -48,6 +47,7 @@ class DashboardViewController:BaseViewController{
     var isDropdownColorOptionVisible = false
     var isDropdownMenuViaible = false
     var refreshControl:UIRefreshControl!
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onTap))
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -110,6 +110,11 @@ class DashboardViewController:BaseViewController{
     @objc func onRefresh(){
         print("Refreshing.........")
         presenter?.getNotes()
+    }
+    @objc func onTap(){
+        print("Tapped on the view")
+        self.onClickColor()
+        self.removeTapGesture()
     }
     
     @IBAction func onSideMenuTapped(_ sender: Any) {
@@ -424,6 +429,7 @@ extension DashboardViewController:UISearchBarDelegate{
 }
 extension DashboardViewController:PDashboardView{
     
+    
     func reloadView() {
         self.filteredNotes = [NoteModel]()
         self.pinnedFilteredNotes = [NoteModel]()
@@ -575,6 +581,7 @@ extension DashboardViewController:PNavigationItemDelegate{
                 self.view.layoutIfNeeded()
             })
         }else{
+            self.addTapGesture()
             self.dropDownColorOptnHC.constant = 130
             isDropdownColorOptionVisible = true
             UIView.animate(withDuration: 0.15, animations: {
@@ -695,6 +702,15 @@ extension DashboardViewController:PDropdownMenu{
             }
         self.onClickOption()
         self.onClickBack()
+    }
+}
+
+extension DashboardViewController{
+    func addTapGesture(){
+//        self.view.addGestureRecognizer(tapGesture)
+    }
+    func removeTapGesture(){
+//        self.view.removeGestureRecognizer(tapGesture)
     }
 }
 

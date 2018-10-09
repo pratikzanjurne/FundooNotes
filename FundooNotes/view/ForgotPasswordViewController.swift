@@ -9,9 +9,6 @@ protocol PForgotPassword {
 class ForgotPasswordViewController: BaseViewController,PForgotPassword {
 
     @IBOutlet var emailText: UITextField!
-    @IBOutlet var mobileNoText: UITextField!
-    @IBOutlet var newPasswordText: UITextField!
-    @IBOutlet var confirmPasswordText: UITextField!
     @IBOutlet var saveBtn: UIButton!
     
     var presenter:ForgotPasswrdPresenter?
@@ -27,11 +24,7 @@ class ForgotPasswordViewController: BaseViewController,PForgotPassword {
 
     @IBAction func saveBtnAction(_ sender: Any) {
         if presenter?.checkAllFields() == true{
-            if presenter?.validateData(email:emailText.text!, mobNo: mobileNoText.text!) == true{
-                if presenter?.validatePasswords(newPassword: newPasswordText.text!, confirmedPassword: confirmPasswordText.text!) == true{
-                    presenter?.updatePassword(email: emailText.text!, password: newPasswordText.text!)
-                }
-            }
+                    presenter?.updatePassword(email: emailText.text!)
         }
     }
     
@@ -39,7 +32,7 @@ class ForgotPasswordViewController: BaseViewController,PForgotPassword {
         presenter?.presentMainView()
     }
     func takeUserData()->ForgotPasswordModel{
-        let userData = ForgotPasswordModel(emailId: emailText.text!, mobNo: mobileNoText.text!, newPassword: newPasswordText.text!, confirmPassword: confirmPasswordText.text!)
+        let userData = ForgotPasswordModel(emailId: emailText.text!)
         return userData
     }
     
@@ -55,7 +48,6 @@ class ForgotPasswordViewController: BaseViewController,PForgotPassword {
     }
     
     func presentMainView() {
-        let vc = storyboard?.instantiateViewController(withIdentifier: "main")
-        present(vc!, animated: true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
 }

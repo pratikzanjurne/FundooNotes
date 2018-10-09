@@ -39,24 +39,14 @@ class PresenterService{
         }
     }
     
-    func validateDataForPassword(email:String,mobNo:String)->Bool{
-        let users = fetchData()
-        var f = 0
-        for user in users{
-            if user.email == email && user.moble_number == mobNo{
-                f = f + 1
-            }
-        }
-        if f != 0{
-            return true
-        }
-        return false
-    }
     
-    func updatePassword(email:String,password:String,completion:(Bool)->Void){
-        UserDBManager.updatePassword(email: email, password: password,completion:{(status) in
+    func updatePassword(email:String,completion:@escaping (Bool)->Void){
+//        UserDBManager.updatePassword(email: email, password: password,completion:{(status) in
+//            completion(status)
+//        })
+        FirebaseDBManager.shared.updatePassword(email: email) { (status) in
             completion(status)
-        })
+        }
     }
     func loginUser(email:String,password:String,completion:@escaping (Bool,String)->Void) {
 //        UserDBManager.loginUser(email: email, password: password) { (response, message, user) in
@@ -69,6 +59,12 @@ class PresenterService{
     
     func isUserExist(email:String,completion:(Bool)->Void){
         UserDBManager.isUserExist(email: email) { (result) in
+            completion(result)
+        }
+    }
+    
+    func logInWithFAcebook(completion:@escaping (Bool)->Void){
+        FirebaseDBManager.shared.logInWithFacebook { (result) in
             completion(result)
         }
     }

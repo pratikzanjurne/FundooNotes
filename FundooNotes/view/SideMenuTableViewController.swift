@@ -40,7 +40,7 @@ class SideMenuTableViewController: UITableViewController,PSideMenuView {
             })
         }
         self.userNameLabel.text = (UserDefaults.standard.object(forKey: "username") as? String)
-        self.userEmailLabel.text = UserDefaults.standard.object(forKey: "userId") as? String
+        self.userEmailLabel.text = UserDefaults.standard.object(forKey: "userEmail") as? String
         notesCell.textLabel?.text = menu[0]
         notesCell.imageView?.image = #imageLiteral(resourceName: "note")
         notesCell.imageView?.tintColor = UIColor(hexString: Constant.Color.colourReminderText)

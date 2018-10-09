@@ -13,7 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
     
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        if UserDefaults.standard.object(forKey: "userId") != nil{
+        if UserDefaults.standard.object(forKey: "userEmail") != nil{
             self.loginUser()
         }else{
         }

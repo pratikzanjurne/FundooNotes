@@ -10,7 +10,8 @@ class DashboardContainerViewController: BaseViewController,PDashboardContainerVi
     var isNotificationTriggered = false
     var notificationNoteId = ""
     @IBOutlet var sideMenuConstrains: NSLayoutConstraint!
-
+    @IBOutlet var containerTrailingConstraint: NSLayoutConstraint!
+    
     var isOpenedSideMenu = false
     var userId:String?
     var presenter:DashboardContainerPresenter?
@@ -61,12 +62,14 @@ class DashboardContainerViewController: BaseViewController,PDashboardContainerVi
     }
     func toggleMenu(){
         if isOpenedSideMenu{
+            self.containerTrailingConstraint.constant = 0
             self.sideMenuConstrains.constant = -240
             UIView.animate(withDuration: 0.8){
                 self.view.layoutIfNeeded()
             }
             self.isOpenedSideMenu = false
         }else{
+            self.containerTrailingConstraint.constant = 240
             self.sideMenuConstrains.constant = 0
             UIView.animate(withDuration:0.8){
                 self.view.layoutIfNeeded()
@@ -78,8 +81,9 @@ class DashboardContainerViewController: BaseViewController,PDashboardContainerVi
         let alert = UIAlertController(title: "Do you want to sign out",
                                       message:nil, preferredStyle: .alert)
         let action = UIAlertAction(title: "Sign Out", style: .default) { (_) in
-            UserDefaults.standard.set(nil, forKey: "userId")
+            UserDefaults.standard.set(nil, forKey: "userEmail")
             UserDefaults.standard.set(nil, forKey: "username")
+            self.presenter?.signOutUser()
             self.showLoginViewController()
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (_) in

@@ -6,4 +6,8 @@ class DashboardContainerPresenterService {
             completion(note)
         }
     }
+    
+    func signOutUser(){
+        FirebaseDBManager.shared.signOutUser()
+    }
 }

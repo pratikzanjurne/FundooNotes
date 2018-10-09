@@ -12,7 +12,7 @@ class ForgotPasswrdPresenter {
     
     func checkAllFields()->Bool{
         let data = pForgotPassword?.takeUserData()
-        if data?.emailId != "" && data?.newPassword != "" && data?.mobNo != "" && data?.confirmPassword != ""{
+        if data?.emailId != ""{
             return true
         }else{
             pForgotPassword?.showAlert(title: "Can't change Password", message: "Enter all the fields Correctly.")
@@ -20,29 +20,10 @@ class ForgotPasswrdPresenter {
         return false
     }
     
-    func validateData(email:String,mobNo:String)->Bool{
-        let validation = presenterService?.validateDataForPassword(email: email, mobNo: mobNo)
-        if validation == true{
-            return true
-        }else{
-            pForgotPassword?.showAlert(title: "Can't change Password", message: "The entered emaid Id and password doesn't exist.")
-        }
-        return false
-    }
-    
-    func validatePasswords(newPassword:String,confirmedPassword:String)->Bool{
-        if newPassword == confirmedPassword{
-            return true
-        }else{
-            pForgotPassword?.showAlert(title: "Can't change Password", message: "Enter the same password in the both fields")
-        }
-        return false
-    }
-    
-    func updatePassword(email:String,password:String){
-        presenterService?.updatePassword(email: email, password: password,completion: {(status) in
+    func updatePassword(email:String){
+        presenterService?.updatePassword(email: email,completion: {(status) in
             if status{
-                pForgotPassword?.showAlert(title: "Password updated", message: "Your password is updated.")
+                self.pForgotPassword?.showAlert(title: "Request sent", message: "The mail has been sent to you for further process.")
             }
         })
     }

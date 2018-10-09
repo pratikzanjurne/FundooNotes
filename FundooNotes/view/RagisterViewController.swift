@@ -1,4 +1,3 @@
-
 import UIKit
 
 
@@ -17,27 +16,25 @@ class RagisterViewController: BaseViewController,PRagisterView {
     @IBOutlet var phoneNumber: UITextField!
     @IBOutlet var emailID: UITextField!
     @IBOutlet var password: UITextField!
+    @IBOutlet var createAccBtn: UIButton!
     @IBOutlet var activityIndicator: UIActivityIndicatorView!
-    
     var presenter:RagisterPresenter?
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initialseView()
-    
     }
     
     override func initialseView() {
         presenter = RagisterPresenter(pRagisterView: self, presenterService: PresenterService())
-        
+        self.activityIndicator.isHidden = true
+        createAccBtn.layer.cornerRadius = 15
     }
     
     @IBAction func createAcc(_ sender: Any) {
         presenter?.createAccount()
     }
-    @IBAction func cancleAction(_ sender: Any) {
+    @IBAction func onPressedAlredyhavAcc(_ sender: Any) {
         presenter?.presentMainView()
     }
     
@@ -65,8 +62,6 @@ class RagisterViewController: BaseViewController,PRagisterView {
     }
     
     func presentMainView() {
-        let vc = storyboard?.instantiateViewController(withIdentifier: "main")
-        present(vc!, animated: true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
-
 }

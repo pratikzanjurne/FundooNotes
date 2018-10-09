@@ -25,10 +25,16 @@ class LoginViewPresenter{
         }
     }
     
-    func loginWithFacebook(email:String,username:String,imageUrl:String?){
-                UserDefaults.standard.set(email, forKey: "userId")
-                UserDefaults.standard.set(username, forKey: "username")
-                UserDefaults.standard.set(imageUrl, forKey: "imageUrl")
-                pLoginView?.showDashboardViewController()
+    func loginWithFacebook(email:String?,username:String?,imageUrl:String?){
+        if let email = email{
+            UserDefaults.standard.set(email, forKey: "userEmail")
+        }
+        if let username = username{
+            UserDefaults.standard.set(username, forKey: "username")
+
+        }
+        presenterService.logInWithFAcebook { (result) in
+        }
+        pLoginView?.showDashboardViewController()
     }
 }

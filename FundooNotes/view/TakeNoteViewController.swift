@@ -113,7 +113,7 @@ class TakeNoteViewController: BaseViewController,UITextViewDelegate,PColorDelega
         if let image = self.image{
             self.imageData = UIImagePNGRepresentation(image) as NSData?
         }
-        let userId = UserDefaults.standard.object(forKey: "userId") as! String
+        let userId = UserDefaults.standard.object(forKey: "userEmail") as! String
         var note = NoteModel(title: noteView.titleTextView.text, note: noteView.noteTextView.text, image:imageData, is_archived: isArchived, is_remidered: isRemindered , is_deleted: isDeleted, creadted_date: createdDate , colour: (self.view.backgroundColor?.toHexString())! , note_id: uuid, is_pinned: isPinned, reminder_date: reminderArray[0], reminder_time: reminderArray[1], userId: userId, edited_date: dateInFormat, imageUrl: nil, imageHeight: image?.size.height, imageWidth: image?.size.width)
         if reminderArray[0] != "MMM d, yyyy" && reminderArray[1] != "HH:MM"{
             Helper.shared.setReminder(note: note, reminderDate: note.reminder_date!, reminderTime: note.reminder_time!, completion: { (result, message) in

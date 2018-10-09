@@ -31,12 +31,22 @@ class FirebaseDBManager{
         }
     }
     
+    func logInWithFacebook(completion:@escaping(Bool)->Void){
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let user = Auth.auth().currentUser else { return }
+        let userRef = rootRef.child(uid)
+        let userInfoRef = userRef.child("user_info")
+        let userInfo:[String:Any] = ["username":user.displayName,"email":user.email,"mobile_no":user.phoneNumber,"photoUrl":"\(String(describing: user.photoURL))"]
+        userInfoRef.setValue(userInfo)
+        completion(true)
+    }
+    
     func loginUser(email:String,password:String,completion:@escaping (Bool,String)->Void){
         Auth.auth().signIn(withEmail: email, password: password) { (authResult, error) in
             if error == nil{
                 if let user = authResult?.user{
                     self.getCurrentUserInfo(userId: user.uid, completion: { (userInfo) in
-                        UserDefaults.standard.set(userInfo.email, forKey: "userId")
+                        UserDefaults.standard.set(userInfo.email, forKey: "userEmail")
                         UserDefaults.standard.set(userInfo.username, forKey: "username")
                         completion(true, "User found")
                     })
@@ -512,6 +522,25 @@ class FirebaseDBManager{
             }else{
                 let noteModel = NoteModel(title: title, note: noteDisc, image: nil, is_archived: isArchived, is_remidered: isRemindered, is_deleted: isDeleted, creadted_date: createdDate, colour: color, note_id: noteId, is_pinned: isPinned, reminder_date: reminderDate, reminder_time: reminderTime, userId: userId, edited_date: editedDate, imageUrl: nil, imageHeight: nil, imageWidth: nil)
                 completion(noteModel)
+            }
+        }
+    }
+    
+    func signOutUser(){
+        do{
+            try Auth.auth().signOut()
+        }catch{
+            print(error.localizedDescription)
+        }
+    }
+    
+    func updatePassword(email:String,completion:@escaping (Bool)->Void){
+        Auth.auth().sendPasswordReset(withEmail: email) { (error) in
+            if error == nil{
+                completion(true)
+            }
+            else{
+                completion(false)
             }
         }
     }
